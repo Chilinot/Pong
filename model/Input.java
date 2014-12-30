@@ -1,12 +1,14 @@
 package model;
 
 public class Input {
-    public enum Dir { UP, DOWN };
-    final public BarKey key;
-    final public Dir dir;
+	public enum Dir {UP, DOWN}
 
-    public Input(BarKey key, Dir dir) {
-        this.key = key;
-        this.dir = dir;
-    }
+	;
+	final public BarKey key;
+	final public Dir    dir;
+
+	public Input(BarKey key, Dir dir) {
+		this.key = key;
+		this.dir = dir;
+	}
 }
