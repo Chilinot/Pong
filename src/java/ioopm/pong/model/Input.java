@@ -1,4 +1,4 @@
-package model;
+package ioopm.pong.model;
 
 public class Input {
 	public enum Dir {UP, DOWN}

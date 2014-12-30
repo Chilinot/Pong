@@ -1,4 +1,4 @@
-package model;
+package ioopm.pong.model;
 
 import java.awt.*;
 import java.util.Set;

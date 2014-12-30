@@ -1,9 +1,9 @@
-package controller;
+package ioopm.pong.controller;
 
-import model.BarKey;
-import model.Input;
-import model.PongModel;
-import view.PongView;
+import ioopm.pong.model.BarKey;
+import ioopm.pong.model.Input;
+import ioopm.pong.model.PongModel;
+import ioopm.pong.view.PongView;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

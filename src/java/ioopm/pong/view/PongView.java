@@ -1,7 +1,7 @@
-package view;
+package ioopm.pong.view;
 
-import model.BarKey;
-import model.PongModel;
+import ioopm.pong.model.BarKey;
+import ioopm.pong.model.PongModel;
 
 import javax.swing.*;
 import java.awt.*;
