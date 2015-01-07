@@ -2,6 +2,7 @@ package ioopm.pong.controller;
 
 import ioopm.pong.model.BarKey;
 import ioopm.pong.model.Input;
+import ioopm.pong.model.MyPongModel;
 import ioopm.pong.model.PongModel;
 import ioopm.pong.view.PongView;
 
@@ -10,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 
-class Pong {
+public class Pong {
 	public static void main(String[] args) {
 		ControllerOptions opt = new ControllerOptions();
 
