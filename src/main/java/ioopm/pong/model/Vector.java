@@ -15,7 +15,7 @@ public class Vector {
 	}
 	
 	public Vector subtract(Vector u, Vector v) {
-		return new Vector(u.getX()-v.getX(),u.getY()+v.getY() );
+		return new Vector(u.getX()-v.getX(),u.getY()-v.getY() );
 	}
 	
 	public double dotProduct(Vector u, Vector v) {
@@ -29,10 +29,7 @@ public class Vector {
 	public void scalarMultiply(double s){
 		this.x *= s;
 		this.y *= s;
-
 	}
-	
-	
 	
 	public void reflect(Vector normal) {
 		Vector lol = subtract(scalarMultiply(2*dotProduct(normal, this), normal), this);

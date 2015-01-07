@@ -16,17 +16,17 @@ public class MyPongModel implements PongModel {
 	private int left_barpos  = left_barheight / 2;
 	private int right_barpos = right_barheight / 2;
 	
-	private final int BALL_SPEED = 3;
+	private final int BALL_SPEED = 10;
 	
 	private final Point  ball           = new Point((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
-	private final Vector ball_direction = new Vector(Math.random() * BALL_SPEED - BALL_SPEED / 2, Math.random() * BALL_SPEED - BALL_SPEED / 2);
+	private final Vector ball_direction = new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1);
 
 	public MyPongModel(String leftPlayer, String rightPlayer) {
 		this.LEFT_PLAYERNAME = leftPlayer;
 		this.RIGHT_PLAYERNAME = rightPlayer;
 		
 		ball_direction.normalize();
-		//TODO multiply ball_direction with ball speed
+		ball_direction.scalarMultiply(BALL_SPEED);
 	}
 
 	@Override
@@ -62,13 +62,34 @@ public class MyPongModel implements PongModel {
 		}
 		
 		//TODO bounce ball
-		
-		if(ball.getX() <= 0) {
-			// Hit left wall
 
+
+		
+		if(ball.getX() < 0) {
+			// Hit left wall
+			ball.setLocation(10, ball.getY());
+			ball_direction.reflect(new Vector(1,0));
+		}
+		else if(ball.getX() > FIELD_SIZE.getWidth()-1) {
+			// Hit right wall
+			ball.setLocation(FIELD_SIZE.getWidth()-10, ball.getY());
+			ball_direction.reflect(new Vector(-1,0));
 		}
 		
+		if(ball.getY() < 0) {
+			// Hit ceiling
+			ball.setLocation(ball.getX(), 10);
+			ball_direction.reflect(new Vector(0,1));
+		}
+		else if(ball.getY() > FIELD_SIZE.getHeight()) {
+			// Hit floor
+			ball.setLocation(ball.getX(), FIELD_SIZE.getHeight()-10);
+			ball_direction.reflect(new Vector(0,-1));
+		}
 		ball.setLocation(ball.getX() + ball_direction.getX(), ball.getY() + ball_direction.getY());
+		System.out.println(ball_direction.getX() + "\t" + ball_direction.getY());
+		
+		
 	}
 
 	@Override
