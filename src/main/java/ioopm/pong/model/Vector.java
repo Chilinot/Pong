@@ -10,22 +10,34 @@ public class Vector {
 		this.y = y;
 	}
 	
-	public void add(Vector v) {
-		this.x += v.getX();
-		this.y += v.getY();
+	public Vector add(Vector u, Vector v) {
+		return new Vector(v.getX()+u.getX(),v.getY()+u.getY() );
 	}
 	
-	public void subtract(Vector v) {
-		this.x -= v.getX();
-		this.y -= v.getY();
+	public Vector subtract(Vector u, Vector v) {
+		return new Vector(u.getX()-v.getX(),u.getY()+v.getY() );
 	}
 	
-	public double scalar(Vector v) {
-		return this.x * v.getX() + this.y * v.getY();
+	public double dotProduct(Vector u, Vector v) {
+		return u.getX() * v.getX() + u.getY() * v.getY();
 	}
+
+	public Vector scalarMultiply(double s, Vector v){
+		return new Vector(v.getX()*s,v.getY()*s);
+	}
+	
+	public void scalarMultiply(double s){
+		this.x *= s;
+		this.y *= s;
+
+	}
+	
+	
 	
 	public void reflect(Vector normal) {
-		0
+		Vector lol = subtract(scalarMultiply(2*dotProduct(normal, this), normal), this);
+		this.x = lol.getX();
+		this.y = lol.getY();
 	}
 	
 	public double getLength() {
