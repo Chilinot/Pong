@@ -9,6 +9,9 @@ public class MyPongModel implements PongModel {
 
 	private final String LEFT_PLAYERNAME;
 	private final String RIGHT_PLAYERNAME;
+	
+	private int left_barpos = 0;
+	private int right_barpos = 0;
 
 	private final Point  ball           = new Point((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
 	private final Vector ball_direction = new Vector(Math.random(), Math.random());
@@ -25,9 +28,11 @@ public class MyPongModel implements PongModel {
 				case LEFT:
 					switch(in.dir) {
 						case UP:
+							this.left_barpos -= 1;
 							break;
 						
 						case DOWN:
+							this.left_barpos += 1;
 							break;
 					}
 					break;
@@ -35,9 +40,11 @@ public class MyPongModel implements PongModel {
 				case RIGHT:
 					switch(in.dir) {
 						case UP:
+							this.right_barpos -= 1;
 							break;
 						
 						case DOWN:
+							this.right_barpos += 1;
 							break;
 					}
 					break;
@@ -49,17 +56,25 @@ public class MyPongModel implements PongModel {
 
 	@Override
 	public int getBarPos(BarKey k) {
+		switch(k) {
+			case LEFT:
+				return this.left_barpos;
+			case RIGHT:
+				return this.right_barpos;
+		}
+		
+		// This can never be reached.
 		return 0;
 	}
 
 	@Override
 	public int getBarHeight(BarKey k) {
-		return 0;
+		return 20;
 	}
 
 	@Override
 	public Point getBallPos() {
-		return null;
+		return this.ball;
 	}
 
 	@Override
