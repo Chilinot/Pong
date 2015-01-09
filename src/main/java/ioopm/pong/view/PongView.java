@@ -66,7 +66,7 @@ public class PongView {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 					frame.setLayout(null);
-					JLabel background = new JLabel("");
+					JLabel background = new JLabel(" ");
 					background.setBackground(Color.BLACK);
 					background.setOpaque(true);
 					background.setBorder(BorderFactory.createLineBorder(Color.WHITE));

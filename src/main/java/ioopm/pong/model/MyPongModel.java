@@ -9,9 +9,12 @@ public class MyPongModel implements PongModel {
 
 	private final String LEFT_PLAYERNAME;
 	private final String RIGHT_PLAYERNAME;
+	
+	private int left_score = 0;
+	private int right_score = 0;
 
-	private int left_barheight  = 100;
-	private int right_barheight = 100;
+	private int left_barheight  = 200;
+	private int right_barheight = 200;
 	
 	private int left_barpos  = left_barheight / 2;
 	private int right_barpos = right_barheight / 2;
@@ -61,35 +64,44 @@ public class MyPongModel implements PongModel {
 			}
 		}
 		
-		//TODO bounce ball
+		//TODO count points if ball missed bar
 
-
-		
+		// Reflect vector against walls
 		if(ball.getX() < 0) {
 			// Hit left wall
-			ball.setLocation(10, ball.getY());
+			ball.setLocation(0, ball.getY());
 			ball_direction.reflect(new Vector(1,0));
+			
+			if(!(ball.getY() >= this.left_barpos && ball.getY() <= (this.left_barpos + this.left_barheight))) {
+				// Missed bar
+				this.right_score += 1;
+			}
 		}
-		else if(ball.getX() > FIELD_SIZE.getWidth()-1) {
+		else if(ball.getX() > FIELD_SIZE.getWidth()) {
 			// Hit right wall
-			ball.setLocation(FIELD_SIZE.getWidth()-10, ball.getY());
+			ball.setLocation(FIELD_SIZE.getWidth(), ball.getY());
 			ball_direction.reflect(new Vector(-1,0));
+
+			if(!(ball.getY() >= this.right_barpos && ball.getY() <= (this.right_barpos + this.right_barheight))) {
+				// Missed bar
+				this.left_score += 1;
+			}
 		}
 		
+		// Reflect vector against roof and floor.
 		if(ball.getY() < 0) {
 			// Hit ceiling
-			ball.setLocation(ball.getX(), 10);
+			ball.setLocation(ball.getX(), 0);
 			ball_direction.reflect(new Vector(0,1));
 		}
 		else if(ball.getY() > FIELD_SIZE.getHeight()) {
 			// Hit floor
-			ball.setLocation(ball.getX(), FIELD_SIZE.getHeight()-10);
+			ball.setLocation(ball.getX(), FIELD_SIZE.getHeight());
 			ball_direction.reflect(new Vector(0,-1));
 		}
+		
+		// Move ball according to direction vector.
 		ball.setLocation(ball.getX() + ball_direction.getX(), ball.getY() + ball_direction.getY());
-		System.out.println(ball_direction.getX() + "\t" + ball_direction.getY());
-		
-		
 	}
 
 	@Override
@@ -126,13 +138,19 @@ public class MyPongModel implements PongModel {
 	@Override
 	public String getMessage() {
 		//TODO fix getMessage()
-		return "tjosan";
+		return "FOOBAR";
 	}
 
 	@Override
 	public String getScore(BarKey k) {
-		//TODO fix getScore()
-		return "2";
+		switch(k) {
+			case LEFT:
+				return String.valueOf(this.left_score);
+			case RIGHT:
+				return String.valueOf(this.right_score);
+		}
+		
+		return "ERROR";
 	}
 
 	@Override

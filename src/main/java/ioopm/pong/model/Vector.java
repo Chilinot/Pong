@@ -10,19 +10,19 @@ public class Vector {
 		this.y = y;
 	}
 	
-	public Vector add(Vector u, Vector v) {
+	public static Vector add(Vector u, Vector v) {
 		return new Vector(v.getX()+u.getX(),v.getY()+u.getY() );
 	}
 	
-	public Vector subtract(Vector u, Vector v) {
+	public static Vector subtract(Vector u, Vector v) {
 		return new Vector(u.getX()-v.getX(),u.getY()-v.getY() );
 	}
 	
-	public double dotProduct(Vector u, Vector v) {
+	public static double dotProduct(Vector u, Vector v) {
 		return u.getX() * v.getX() + u.getY() * v.getY();
 	}
 
-	public Vector scalarMultiply(double s, Vector v){
+	public static Vector scalarMultiply(double s, Vector v){
 		return new Vector(v.getX()*s,v.getY()*s);
 	}
 	
@@ -33,6 +33,7 @@ public class Vector {
 	
 	public void reflect(Vector normal) {
 		Vector lol = subtract(scalarMultiply(2*dotProduct(normal, this), normal), this);
+		lol.scalarMultiply(-1D);
 		this.x = lol.getX();
 		this.y = lol.getY();
 	}
