@@ -33,9 +33,12 @@ public class Vector {
 	
 	public void reflect(Vector normal) {
 		Vector lol = subtract(scalarMultiply(2*dotProduct(normal, this), normal), this);
-		lol.scalarMultiply(-1D);
 		this.x = lol.getX();
 		this.y = lol.getY();
+	}
+	
+	public void invert() {
+		this.scalarMultiply(-1D);
 	}
 	
 	public double getLength() {

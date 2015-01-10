@@ -71,6 +71,7 @@ public class MyPongModel implements PongModel {
 			// Hit left wall
 			ball.setLocation(0, ball.getY());
 			ball_direction.reflect(new Vector(1,0));
+			ball_direction.invert();
 			
 			if(!(ball.getY() >= this.left_barpos && ball.getY() <= (this.left_barpos + this.left_barheight))) {
 				// Missed bar
@@ -81,7 +82,8 @@ public class MyPongModel implements PongModel {
 			// Hit right wall
 			ball.setLocation(FIELD_SIZE.getWidth(), ball.getY());
 			ball_direction.reflect(new Vector(-1,0));
-
+			ball_direction.invert();
+			
 			if(!(ball.getY() >= this.right_barpos && ball.getY() <= (this.right_barpos + this.right_barheight))) {
 				// Missed bar
 				this.left_score += 1;
@@ -93,11 +95,13 @@ public class MyPongModel implements PongModel {
 			// Hit ceiling
 			ball.setLocation(ball.getX(), 0);
 			ball_direction.reflect(new Vector(0,1));
+			ball_direction.invert();
 		}
 		else if(ball.getY() > FIELD_SIZE.getHeight()) {
 			// Hit floor
 			ball.setLocation(ball.getX(), FIELD_SIZE.getHeight());
 			ball_direction.reflect(new Vector(0,-1));
+			ball_direction.invert();
 		}
 		
 		// Move ball according to direction vector.
