@@ -40,7 +40,7 @@ public class MyPongModel implements PongModel {
 
 		int right_top = right_barpos - right_barheight / 2;
 		int right_bot = right_top + right_barheight;
-		
+
 		for(Input in : input) {
 			switch(in.key) {
 				case LEFT:
