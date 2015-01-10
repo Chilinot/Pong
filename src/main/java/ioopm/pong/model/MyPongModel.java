@@ -19,7 +19,7 @@ public class MyPongModel implements PongModel {
 	private int left_barpos  = left_barheight / 2;
 	private int right_barpos = right_barheight / 2;
 	
-	private final int BALL_SPEED = 10;
+	private final int BALL_SPEED = 20;
 	
 	private final Point  ball           = new Point((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
 	private final Vector ball_direction = new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1);
