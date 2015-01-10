@@ -10,7 +10,7 @@ public class MyPongModel implements PongModel {
 	private final String LEFT_PLAYERNAME;
 	private final String RIGHT_PLAYERNAME;
 	
-	private int left_score = 0;
+	private int left_score  = 0;
 	private int right_score = 0;
 
 	private int left_barheight  = 200;
@@ -34,18 +34,27 @@ public class MyPongModel implements PongModel {
 
 	@Override
 	public void compute(Set<Input> input, long delta_t) {
+
+		int left_top = left_barpos - left_barheight / 2;
+		int left_bot = left_top + left_barheight;
+
+		int right_top = right_barpos - right_barheight / 2;
+		int right_bot = right_top + right_barheight;
 		
-		//TODO restrict movement of bars
 		for(Input in : input) {
 			switch(in.key) {
 				case LEFT:
 					switch(in.dir) {
 						case UP:
-							this.left_barpos -= 10;
+							if(left_top > 0) {
+								this.left_barpos -= 10;
+							}
 							break;
 						
 						case DOWN:
-							this.left_barpos += 10;
+							if(left_bot < FIELD_SIZE.getHeight()) {
+								this.left_barpos += 10;
+							}
 							break;
 					}
 					break;
@@ -53,18 +62,20 @@ public class MyPongModel implements PongModel {
 				case RIGHT:
 					switch(in.dir) {
 						case UP:
-							this.right_barpos -= 10;
+							if(right_top > 0) {
+								this.right_barpos -= 10;
+							}
 							break;
 						
 						case DOWN:
-							this.right_barpos += 10;
+							if(right_bot < FIELD_SIZE.getHeight()) {
+								this.right_barpos += 10;
+							}
 							break;
 					}
 					break;
 			}
 		}
-		
-		//TODO count points if ball missed bar
 
 		// Reflect vector against walls
 		if(ball.getX() < 0) {
@@ -73,8 +84,11 @@ public class MyPongModel implements PongModel {
 			ball_direction.reflect(new Vector(1,0));
 			ball_direction.invert();
 			
-			if(!(ball.getY() >= this.left_barpos && ball.getY() <= (this.left_barpos + this.left_barheight))) {
-				// Missed bar
+			if(ball.getY() >= left_top && ball.getY() <= left_bot) {
+				// Hit the bar
+				//TODO direct ball vector according to bar movement.
+			}
+			else {
 				this.right_score += 1;
 			}
 		}
@@ -84,8 +98,11 @@ public class MyPongModel implements PongModel {
 			ball_direction.reflect(new Vector(-1,0));
 			ball_direction.invert();
 			
-			if(!(ball.getY() >= this.right_barpos && ball.getY() <= (this.right_barpos + this.right_barheight))) {
-				// Missed bar
+			if(ball.getY() >= right_top && ball.getY() <= right_bot) {
+				// Hit the bar
+				//TODO direct ball vector according to bar movement.
+			}
+			else {
 				this.left_score += 1;
 			}
 		}
