@@ -23,7 +23,7 @@ public class MyPongModel implements PongModel {
 	private final int bar_speed = 20;
 	private final int aim_sensitivity = 50;
 	
-	private final Point  ball           = new Point((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
+	private final Vector ball          = new Vector((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
 	private final Vector ball_direction = new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1);
 
 	public MyPongModel(String leftPlayer, String rightPlayer) {
@@ -84,7 +84,7 @@ public class MyPongModel implements PongModel {
 		verticalCollisonHandling();
 		
 		// Move ball according to direction vector.
-		ball.setLocation(ball.getX() + ball_direction.getX(), ball.getY() + ball_direction.getY());
+		ball.set(ball.getX() + ball_direction.getX(), ball.getY() + ball_direction.getY());
 	}
 
 	private void horizontalCollisionHandling(){
@@ -98,7 +98,7 @@ public class MyPongModel implements PongModel {
 		// Reflect vector against walls
 		if(ball.getX() < 0) {
 			// Hit left wall
-			ball.setLocation(0, ball.getY());
+			ball.set(0, ball.getY());
 			ball_direction.reflect(new Vector(1,0));
 			ball_direction.invert();
 			
@@ -108,12 +108,12 @@ public class MyPongModel implements PongModel {
 				paddleBounce(true);
 			}
 			else {
-				this.right_score += 1;
+				death(true);
 			}
 		}
 		else if(ball.getX() > FIELD_SIZE.getWidth()) {
 			// Hit right wall
-			ball.setLocation(FIELD_SIZE.getWidth(), ball.getY());
+			ball.set(FIELD_SIZE.getWidth(), ball.getY());
 			ball_direction.reflect(new Vector(-1,0));
 			ball_direction.invert();
 			
@@ -123,7 +123,7 @@ public class MyPongModel implements PongModel {
 				paddleBounce(false);
 			}
 			else {
-				this.left_score += 1;
+				death(false);
 			}
 		}
 	}
@@ -132,13 +132,13 @@ public class MyPongModel implements PongModel {
 		// Reflect vector against roof and floor.
 		if(ball.getY() < 0) {
 			// Hit ceiling
-			ball.setLocation(ball.getX(), 0);
+			ball.set(ball.getX(), 0);
 			ball_direction.reflect(new Vector(0,1));
 			ball_direction.invert();
 		}
 		else if(ball.getY() > FIELD_SIZE.getHeight()) {
 			// Hit floor
-			ball.setLocation(ball.getX(), FIELD_SIZE.getHeight());
+			ball.set(ball.getX(), FIELD_SIZE.getHeight());
 			ball_direction.reflect(new Vector(0,-1));
 			ball_direction.invert();
 		}
@@ -156,11 +156,24 @@ public class MyPongModel implements PongModel {
 		
 		//Vector realtive_vector = new Vector(0,ball.y-paddle_center); 
 		
-		return_vector = Vector.subtract(new Vector(0,ball.y-paddle_center), reflection_point);
+		return_vector = Vector.subtract(new Vector(0,ball.getY()-paddle_center), reflection_point);
 		return_vector.normalize();
 		ball_direction.setX(return_vector.getX());
 		ball_direction.setY(return_vector.getY());
-		ball_direction.scalarMultiply(ball_speed);
+		ball_direction.setMagnitude(ball_speed);	
+	}
+	
+	private void death(boolean left_side){
+		if(left_side){
+			right_score++;
+		}else{
+			left_score++;
+		}
+		
+		ball_direction.set(Math.random() * 2 - 1, Math.random() * 2 - 1);
+		ball_direction.setMagnitude(ball_speed);
+		ball.set(FIELD_SIZE.getWidth() / 2,(FIELD_SIZE.getHeight() / 2));
+		
 		
 	}
 
@@ -192,7 +205,7 @@ public class MyPongModel implements PongModel {
 
 	@Override
 	public Point getBallPos() {
-		return this.ball;
+		return new Point((int)this.ball.getX(),(int)this.ball.getY());
 	}
 
 	@Override
