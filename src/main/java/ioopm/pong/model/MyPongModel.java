@@ -19,7 +19,9 @@ public class MyPongModel implements PongModel {
 	private int left_barpos  = left_barheight / 2;
 	private int right_barpos = right_barheight / 2;
 	
-	private final int BALL_SPEED = 20;
+	private final int ball_speed = 20;
+	private final int bar_speed = 20;
+	private final int aim_sensitivity = 50;
 	
 	private final Point  ball           = new Point((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
 	private final Vector ball_direction = new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1);
@@ -29,7 +31,7 @@ public class MyPongModel implements PongModel {
 		this.RIGHT_PLAYERNAME = rightPlayer;
 		
 		ball_direction.normalize();
-		ball_direction.scalarMultiply(BALL_SPEED);
+		ball_direction.scalarMultiply(ball_speed);
 	}
 
 	@Override
@@ -47,13 +49,13 @@ public class MyPongModel implements PongModel {
 					switch(in.dir) {
 						case UP:
 							if(left_top > 0) {
-								this.left_barpos -= 10;
+								this.left_barpos -= bar_speed;
 							}
 							break;
 						
 						case DOWN:
 							if(left_bot < FIELD_SIZE.getHeight()) {
-								this.left_barpos += 10;
+								this.left_barpos += bar_speed;
 							}
 							break;
 					}
@@ -63,13 +65,13 @@ public class MyPongModel implements PongModel {
 					switch(in.dir) {
 						case UP:
 							if(right_top > 0) {
-								this.right_barpos -= 10;
+								this.right_barpos -= bar_speed;
 							}
 							break;
 						
 						case DOWN:
 							if(right_bot < FIELD_SIZE.getHeight()) {
-								this.right_barpos += 10;
+								this.right_barpos += bar_speed;
 							}
 							break;
 					}
@@ -77,6 +79,22 @@ public class MyPongModel implements PongModel {
 			}
 		}
 
+		horizontalCollisionHandling();
+		
+		verticalCollisonHandling();
+		
+		// Move ball according to direction vector.
+		ball.setLocation(ball.getX() + ball_direction.getX(), ball.getY() + ball_direction.getY());
+	}
+
+	private void horizontalCollisionHandling(){
+		
+		int left_top = left_barpos - left_barheight / 2;
+		int left_bot = left_top + left_barheight;
+
+		int right_top = right_barpos - right_barheight / 2;
+		int right_bot = right_top + right_barheight;
+		
 		// Reflect vector against walls
 		if(ball.getX() < 0) {
 			// Hit left wall
@@ -87,6 +105,7 @@ public class MyPongModel implements PongModel {
 			if(ball.getY() >= left_top && ball.getY() <= left_bot) {
 				// Hit the bar
 				//TODO direct ball vector according to bar movement.
+				paddleBounce(true);
 			}
 			else {
 				this.right_score += 1;
@@ -101,12 +120,15 @@ public class MyPongModel implements PongModel {
 			if(ball.getY() >= right_top && ball.getY() <= right_bot) {
 				// Hit the bar
 				//TODO direct ball vector according to bar movement.
+				paddleBounce(false);
 			}
 			else {
 				this.left_score += 1;
 			}
 		}
-		
+	}
+	
+	private void verticalCollisonHandling(){
 		// Reflect vector against roof and floor.
 		if(ball.getY() < 0) {
 			// Hit ceiling
@@ -120,9 +142,26 @@ public class MyPongModel implements PongModel {
 			ball_direction.reflect(new Vector(0,-1));
 			ball_direction.invert();
 		}
+	}
+	
+	private void paddleBounce(boolean left_side){
+		int paddle_center = left_side ? left_barpos : right_barpos;
+		Vector return_vector;
+		Vector reflection_point;
+		if(left_side){
+			reflection_point = new Vector(-aim_sensitivity,0);
+		}else{
+			reflection_point = new Vector(aim_sensitivity,0);
+		}
 		
-		// Move ball according to direction vector.
-		ball.setLocation(ball.getX() + ball_direction.getX(), ball.getY() + ball_direction.getY());
+		//Vector realtive_vector = new Vector(0,ball.y-paddle_center); 
+		
+		return_vector = Vector.subtract(new Vector(0,ball.y-paddle_center), reflection_point);
+		return_vector.normalize();
+		ball_direction.setX(return_vector.getX());
+		ball_direction.setY(return_vector.getY());
+		ball_direction.scalarMultiply(ball_speed);
+		
 	}
 
 	@Override
