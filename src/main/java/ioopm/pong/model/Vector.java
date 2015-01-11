@@ -1,5 +1,7 @@
 package ioopm.pong.model;
 
+import java.awt.Point;
+
 public class Vector {
 	
 	private double x;
@@ -65,5 +67,10 @@ public class Vector {
 	
 	public double getY() {
 		return this.y;
+	}
+	
+	public static Vector pointToVector(Point p){
+		return new Vector(p.x,p.y);
+		
 	}
 }
