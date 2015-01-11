@@ -30,7 +30,7 @@ public class MyPongModel implements PongModel {
 	private final double aim_sensitivity = 100;
 	
 	private final Vector ball          = new Vector((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
-	private final Vector ball_direction = new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1);
+	private final Vector ball_direction = new Vector(Math.random()>.5 ? 1 : -1, (Math.random() * 2 - 1)/2);
 
 	public MyPongModel(String leftPlayer, String rightPlayer) {
 		this.LEFT_PLAYERNAME = leftPlayer;
@@ -178,15 +178,17 @@ public class MyPongModel implements PongModel {
 		if(left_side){
 			right_score++;
 			left_barheight += 20;
+			right_barheight -= 20;
 		}else{
 			left_score++;
 			right_barheight += 20;
+			left_barheight -= 20;
 		}
 		
 		level++;
 		ball_speed += speed_increment;
 		
-		ball_direction.set(Math.random() * 2 - 1, Math.random() * 2 - 1);
+		ball_direction.set(Math.random()>.5 ? 1 : -1, (Math.random() * 2 - 1)/2);
 		ball_direction.setMagnitude(ball_speed);
 		ball.set(FIELD_SIZE.getWidth() / 2,(FIELD_SIZE.getHeight() / 2));
 		
