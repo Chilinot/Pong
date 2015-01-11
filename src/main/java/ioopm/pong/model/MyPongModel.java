@@ -10,6 +10,12 @@ public class MyPongModel implements PongModel {
 	private final String LEFT_PLAYERNAME;
 	private final String RIGHT_PLAYERNAME;
 	
+	private int level = 1;
+	private double speed_increment = .1;
+	private double bar_speed_increment = .1;
+	private int bounces = 0;
+	private int bounce_per_level = 3;
+	
 	private int left_score  = 0;
 	private int right_score = 0;
 
@@ -19,9 +25,9 @@ public class MyPongModel implements PongModel {
 	private int left_barpos  = (int) FIELD_SIZE.getHeight() / 2;
 	private int right_barpos = (int) FIELD_SIZE.getHeight() / 2;
 	
-	private final double ball_speed = .5;
-	private final double bar_speed = 1;
-	private final double aim_sensitivity = 50;
+	private double ball_speed = .5;
+	private double bar_speed = 1;
+	private final double aim_sensitivity = 100;
 	
 	private final Vector ball          = new Vector((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
 	private final Vector ball_direction = new Vector(Math.random() * 2 - 1, Math.random() * 2 - 1);
@@ -154,6 +160,13 @@ public class MyPongModel implements PongModel {
 		
 		//Vector realtive_vector = new Vector(0,ball.y-paddle_center); 
 		
+		bounces++;
+		if(bounces % bounce_per_level == 0){
+			level++;
+			ball_speed += speed_increment;
+			bar_speed += bar_speed_increment;
+		}
+		
 		return_vector = Vector.subtract(new Vector(0,ball.getY()-paddle_center), reflection_point);
 		return_vector.normalize();
 		ball_direction.setX(return_vector.getX());
@@ -164,13 +177,20 @@ public class MyPongModel implements PongModel {
 	private void death(boolean left_side){
 		if(left_side){
 			right_score++;
+			left_barheight += 20;
 		}else{
 			left_score++;
+			right_barheight += 20;
 		}
+		
+		level++;
+		ball_speed += speed_increment;
 		
 		ball_direction.set(Math.random() * 2 - 1, Math.random() * 2 - 1);
 		ball_direction.setMagnitude(ball_speed);
 		ball.set(FIELD_SIZE.getWidth() / 2,(FIELD_SIZE.getHeight() / 2));
+		
+		
 		
 		
 	}
@@ -208,8 +228,7 @@ public class MyPongModel implements PongModel {
 
 	@Override
 	public String getMessage() {
-		//TODO fix getMessage()
-		return "FOOBAR";
+		return "Level: " + level;
 	}
 
 	@Override

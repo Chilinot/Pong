@@ -26,7 +26,7 @@ public class Pong {
 }
 
 class ControllerOptions {
-	private int    framerate      = 30;
+	private int    framerate      = 250;
 	private String leftPlayer     = "Left Player";
 	private char   leftPlayerUp   = 'w';
 	private char   leftPlayerDown = 's';
