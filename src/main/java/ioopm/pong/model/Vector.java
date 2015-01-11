@@ -34,6 +34,7 @@ public class Vector {
 	}
 	
 	public void reflect(Vector normal) {
+		normal.normalize();
 		Vector lol = subtract(scalarMultiply(2*dotProduct(normal, this), normal), this);
 		this.x = lol.getX();
 		this.y = lol.getY();
