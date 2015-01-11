@@ -192,7 +192,7 @@ class Bar {
  * visualizing the ball
  */
 class Ball {
-	public static final int SIZE = 20;
+	public static final int SIZE = 5;
 
 	private final JComponent comp = new JLabel("");
 
