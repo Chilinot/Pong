@@ -47,6 +47,11 @@ public class Vector {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}
 	
+	public void setMagnitude(double s){
+		this.normalize();
+		this.scalarMultiply(s);
+	}
+	
 	public void normalize() {
 		double length = this.getLength();
 		this.x /= length;
@@ -67,6 +72,11 @@ public class Vector {
 	
 	public double getY() {
 		return this.y;
+	}
+	
+	public void set(double x, double y){
+		this.x = x;
+		this.y = y;
 	}
 	
 	public static Vector pointToVector(Point p){
