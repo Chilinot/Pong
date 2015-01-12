@@ -3,6 +3,11 @@ package ioopm.pong.model;
 import java.awt.*;
 import java.util.Set;
 
+/**
+ * The worlds least playable pong...
+ * @author TheGrandmother and Chilinot
+ *
+ */
 public class MyPongModel implements PongModel {
 
 	private final static Dimension FIELD_SIZE = new Dimension(2000, 1000);
@@ -16,6 +21,8 @@ public class MyPongModel implements PongModel {
 	private int bounces = 0;
 	private int bounce_per_level = 3;
 	
+	private final double aim_sensitivity = 150;
+	
 	private int left_score  = 0;
 	private int right_score = 0;
 
@@ -27,8 +34,7 @@ public class MyPongModel implements PongModel {
 	
 	private double ball_speed = .5;
 	private double bar_speed = 1;
-	private final double aim_sensitivity = 100;
-	
+
 	private final Vector ball          = new Vector((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
 	private final Vector ball_direction = new Vector(Math.random()>.5 ? 1 : -1, (Math.random() * 2 - 1)/2);
 
@@ -94,6 +100,11 @@ public class MyPongModel implements PongModel {
 		ball.set(ball.getX() + ball_direction.getX()*delta_t, ball.getY() + ball_direction.getY()*delta_t);
 	}
 
+	/**
+	 *Handles the collision when the balls hits either the left end or the right end of the playing field.
+	 *Checks whether the ball hits the paddle or not. If the ball hits the paddle {@link MyPongModel#paddleBounce(boolean, double)} will be called
+	 *and if the ball hits the edge {@link MyPongModel#death(boolean)} will be called.
+	 */
 	private void horizontalCollisionHandling(){
 		
 		int left_top = left_barpos - left_barheight / 2;
@@ -105,12 +116,9 @@ public class MyPongModel implements PongModel {
 		// Reflect vector against walls
 		if(ball.getX() < 0) {
 			// Hit left wall
-			ball.set(0, ball.getY());
-			ball_direction.reflect(new Vector(1,0));
-			ball_direction.invert();
 			
 			if(ball.getY() >= left_top && ball.getY() <= left_bot) {
-				paddleBounce(true);
+				paddleBounce(true,aim_sensitivity);
 			}
 			else {
 				death(true);
@@ -118,13 +126,10 @@ public class MyPongModel implements PongModel {
 		}
 		else if(ball.getX() > FIELD_SIZE.getWidth()) {
 			// Hit right wall
-			ball.set(FIELD_SIZE.getWidth(), ball.getY());
-			ball_direction.reflect(new Vector(-1,0));
-			ball_direction.invert();
 			
 			if(ball.getY() >= right_top && ball.getY() <= right_bot) {
 
-				paddleBounce(false);
+				paddleBounce(false,aim_sensitivity);
 			}
 			else {
 				death(false);
@@ -132,6 +137,9 @@ public class MyPongModel implements PongModel {
 		}
 	}
 	
+	/**
+	 * Bounces the ball against the top or bottom edge of the playing field.
+	 */
 	private void verticalCollisonHandling(){
 		// Reflect vector against roof and floor.
 		if(ball.getY() < 0) {
@@ -148,7 +156,12 @@ public class MyPongModel implements PongModel {
 		}
 	}
 	
-	private void paddleBounce(boolean left_side){
+	/**
+	 * Handles the bouncing of the ball against the paddle.
+	 * @param left_side If the ball hit the left side of the field.
+	 * @param aim_sensitivity How sensitive the aim should be. A lower value leads to a higher sensitivity.
+	 */
+	private void paddleBounce(boolean left_side,double aim_sensitivity){
 		int paddle_center = left_side ? left_barpos : right_barpos;
 		Vector return_vector;
 		Vector reflection_point;
@@ -174,6 +187,12 @@ public class MyPongModel implements PongModel {
 		ball_direction.setMagnitude(ball_speed);	
 	}
 	
+	/**
+	 * 
+	 * Handles the assignment of points, resizing of paddles and the resetting of the ball.
+	 * 
+	 * @param left_side If the ball exited the left side or not.
+	 */
 	private void death(boolean left_side){
 		if(left_side){
 			right_score++;
