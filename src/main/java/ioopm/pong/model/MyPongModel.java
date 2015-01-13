@@ -16,11 +16,21 @@ public class MyPongModel implements PongModel {
 	private final String RIGHT_PLAYERNAME;
 	
 	private int level = 1;
+	/**
+	 * How much speed the ball gains each level.
+	 */
 	private double speed_increment = .1;
-	private double bar_speed_increment = .1;
-	private int bounces = 0;
-	private int bounce_per_level = 3;
-	
+	/**
+	 * How much speed the paddles gain each level.
+	 */
+	private double bar_speed_increment = .05;
+	/**
+	 * The time interval between level-ups
+	 */
+	private final int time_per_level = 3;
+	private long level_timer;
+	private boolean game_started = false;
+
 	private final double aim_sensitivity = 150;
 	
 	private int left_score  = 0;
@@ -38,17 +48,40 @@ public class MyPongModel implements PongModel {
 	private final Vector ball          = new Vector((int) FIELD_SIZE.getWidth() / 2, (int) (FIELD_SIZE.getHeight() / 2));
 	private final Vector ball_direction = new Vector(Math.random()>.5 ? 1 : -1, (Math.random() * 2 - 1)/2);
 
+	
+	/**
+	 * 
+	 * Creates a new MyPongModel. Player names are not yet implemented
+	 * 
+	 * @param leftPlayer Name for the left player
+	 * @param rightPlayer Name for the right player
+	 */
+	@Deprecated
 	public MyPongModel(String leftPlayer, String rightPlayer) {
 		this.LEFT_PLAYERNAME = leftPlayer;
 		this.RIGHT_PLAYERNAME = rightPlayer;
 		
+		
+	}
+	
+	/**
+	 * Creates a new pong model.
+	 */
+	public MyPongModel() {
 		ball_direction.normalize();
 		ball_direction.scalarMultiply(ball_speed);
+		LEFT_PLAYERNAME ="";
+		RIGHT_PLAYERNAME= "";
 	}
 
 	@Override
 	public void compute(Set<Input> input, long delta_t) {
-
+		if(!game_started){
+			game_started = true;
+			level_timer = System.currentTimeMillis();
+		}
+		
+		
 		int left_top = left_barpos - left_barheight / 2;
 		int left_bot = left_top + left_barheight;
 
@@ -95,6 +128,8 @@ public class MyPongModel implements PongModel {
 		horizontalCollisionHandling();
 		
 		verticalCollisonHandling();
+		
+		levelHandler();
 		
 		// Move ball according to direction vector.
 		ball.set(ball.getX() + ball_direction.getX()*delta_t, ball.getY() + ball_direction.getY()*delta_t);
@@ -171,14 +206,6 @@ public class MyPongModel implements PongModel {
 			reflection_point = new Vector(aim_sensitivity,0);
 		}
 		
-		//Vector realtive_vector = new Vector(0,ball.y-paddle_center); 
-		
-		bounces++;
-		if(bounces % bounce_per_level == 0){
-			level++;
-			ball_speed += speed_increment;
-			bar_speed += bar_speed_increment;
-		}
 		
 		return_vector = Vector.subtract(new Vector(0,ball.getY()-paddle_center), reflection_point);
 		return_vector.normalize();
@@ -204,8 +231,6 @@ public class MyPongModel implements PongModel {
 			left_barheight -= 20;
 		}
 		
-		level++;
-		ball_speed += speed_increment;
 		
 		ball_direction.set(Math.random()>.5 ? 1 : -1, (Math.random() * 2 - 1)/2);
 		ball_direction.setMagnitude(ball_speed);
@@ -213,6 +238,19 @@ public class MyPongModel implements PongModel {
 		
 		
 		
+		
+	}
+	
+	/**
+	 * This function tests whether the next level has been reached and takes action accordingly.
+	 */
+	public void levelHandler(){
+		if(game_started && ((System.currentTimeMillis()-level_timer)/1000.) >= time_per_level){
+			level++;
+			ball_speed += speed_increment;
+			bar_speed += bar_speed_increment;
+			level_timer = System.currentTimeMillis();
+		}
 		
 	}
 
