@@ -18,5 +18,5 @@ N/A
 - Multiplayer mode, with more than two players.
 
 ##Any misc info
-- Everything in France can not be eaten.
-- Inte allt som glimmar är guld.
+- Just because its from France doesn't mean that you can eat it!
+- Inte allt som glimmar är glammigt.
